@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Does That Light Mean?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1b1f22; --steel:#272d32; --steel2:#38414a; --line:#4a545e;
+    --yellow:#f5c400; --red:#e5412f; --green:#4fbf6b; --paper:#ebe8e1; --muted:#9ba5ae;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--paper);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.5;
+    background:
+      repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 14px),
+      repeating-linear-gradient(-45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 14px),
+      var(--bg);}
+  .stripe{height:16px;background:repeating-linear-gradient(-45deg,var(--yellow) 0 16px,#1b1f22 16px 32px)}
+  main{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+  .head{font-family:Oswald,"Arial Narrow",Impact,sans-serif}
+  h1{font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(2.2rem,10vw,3.4rem);line-height:1.05;margin:0;color:var(--paper);letter-spacing:1px}
+  h1 span{color:var(--yellow)}
+  .panel{background:var(--steel);border:2px solid var(--line);border-radius:6px;padding:18px;margin-top:16px}
+  button{font:inherit;color:var(--paper);cursor:pointer}
+  button:focus-visible,input:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+  .btn{font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:700;font-size:1.35rem;letter-spacing:1px;text-transform:uppercase;background:var(--yellow);color:#1b1f22;border:0;border-radius:4px;padding:12px 30px;box-shadow:0 4px 0 #a98600}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a98600}
+  .hidden{display:none}
+  /* start */
+  #start{text-align:center;padding:26px 18px}
+  .row-icons{display:flex;justify-content:center;gap:10px;margin:22px 0}
+  .row-icons .mini{width:50px;height:50px;border-radius:50%;background:#101315;border:2px solid var(--line);display:grid;place-items:center}
+  .row-icons svg{width:30px;height:30px}
+  label.chk{display:flex;gap:10px;align-items:center;justify-content:center;margin:22px 0 22px;color:var(--paper)}
+  input[type=checkbox]{width:22px;height:22px;accent-color:var(--yellow)}
+  /* quiz */
+  .hud{display:flex;justify-content:space-between;align-items:center;font-family:Oswald,"Arial Narrow",sans-serif;font-size:1.15rem;letter-spacing:.5px}
+  .hud b{color:var(--yellow);font-weight:700}
+  .bar{height:8px;background:#14181a;border-radius:2px;margin-top:10px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--yellow);transition:width .3s}
+  .timer{height:8px;background:#14181a;border-radius:2px;margin-top:6px;overflow:hidden}
+  .timer i{display:block;height:100%;width:100%;background:var(--red)}
+  .card{background:#202529;border:2px solid var(--line);border-radius:6px;padding:16px;margin-top:14px}
+  .gauge{display:flex;justify-content:center;margin:4px 0 14px}
+  .light{width:116px;height:116px;border-radius:50%;display:grid;place-items:center;background:#0d0f10;border:4px solid #3a434b}
+  .light svg{width:68px;height:68px}
+  .light.red{box-shadow:0 0 24px rgba(229,65,47,.5)}
+  .light.amber{box-shadow:0 0 24px rgba(245,196,0,.45)}
+  .light.blink svg{animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:.1}}
+  .scene{font-size:1.08rem;font-weight:600;margin-bottom:12px}
+  .opts{display:grid;gap:10px}
+  .opt{background:var(--steel2);border:2px solid var(--line);border-radius:4px;padding:12px 14px;text-align:left}
+  .opt:hover:not(:disabled){border-color:var(--yellow)}
+  .opt:disabled{cursor:default;color:var(--paper)}
+  .opt.right{border-color:var(--green);background:#1d3a27}
+  .opt.wrong{border-color:var(--red);background:#40201c}
+  .fb{margin-top:14px;padding:12px 14px;border-radius:4px;background:#14181a;border-left:6px solid var(--muted)}
+  .fb.good{border-left-color:var(--green)}
+  .fb.bad{border-left-color:var(--red)}
+  .fb strong{display:block;font-family:Oswald,"Arial Narrow",sans-serif;font-size:1.2rem;letter-spacing:.5px;margin-bottom:2px}
+  .tag{display:inline-block;font-size:.85rem;font-weight:700;border-radius:3px;padding:2px 8px;margin-top:8px;color:#1b1f22}
+  .tag.red{background:var(--red)} .tag.amber{background:var(--yellow)} .tag.green{background:var(--green)}
+  /* end */
+  #end{text-align:center;padding:26px 18px}
+  .emoji{font-size:4.5rem;line-height:1}
+  .rank{font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(2rem,9vw,3rem);line-height:1.1;margin:10px 0 6px;color:var(--yellow)}
+  .rank.bad{color:var(--red)}
+  .final{font-family:Oswald,"Arial Narrow",sans-serif;font-size:1.6rem;margin:4px 0}
+  .quip{font-size:1.15rem;margin:10px auto 22px;max-width:420px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<main>
+  <!-- START -->
+  <section id="start" class="panel">
+    <h1>What does that <span>light</span> mean?</h1>
+    <div class="row-icons" id="rowIcons" aria-hidden="true"></div>
+    <label class="chk"><input type="checkbox" id="timerToggle"> 20 second timer (+25 bonus for fast answers)</label>
+    <button class="btn" id="startBtn">Start</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden" aria-live="polite">
+    <div class="panel" style="margin-top:0">
+      <div class="hud">
+        <span>Question <b id="qnum">1</b> / <b id="qtotal">10</b></span>
+        <span>Score <b id="score">0</b></span>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+      <div class="timer hidden" id="timerWrap" aria-hidden="true"><i id="timerBar"></i></div>
+      <div class="card">
+        <div class="gauge"><div class="light" id="light" role="img" aria-label="Dashboard symbol"></div></div>
+        <div class="scene" id="scene"></div>
+        <div class="opts" id="opts"></div>
+        <div class="fb hidden" id="fb" role="status"></div>
+        <div style="margin-top:14px"><button class="btn hidden" id="nextBtn">Next</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="panel hidden">
+    <div class="emoji" id="emoji"></div>
+    <div class="rank" id="rank"></div>
+    <div class="final" id="finalScore"></div>
+    <div class="muted" id="correctCount" style="color:var(--muted)"></div>
+    <p class="quip" id="quip"></p>
+    <button class="btn" id="againBtn">Play again</button>
+  </section>
+</main>
+<div class="stripe"></div>
+
+<script>
+const SW='fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"';
+const R='stroke="#e5412f"', A='stroke="#f5c400"';
+const ICONS = {
+  parking: `<svg viewBox="0 0 64 64" ${SW} ${R}><circle cx="32" cy="32" r="14"/><path d="M27 40V24h6.5a5 5 0 0 1 0 10H27"/><path d="M15 17Q5 32 15 47M49 17Q59 32 49 47"/></svg>`,
+  coolant: `<svg viewBox="0 0 64 64" ${SW} ${R}><path d="M16 38V12a5 5 0 0 1 10 0v26a9 9 0 1 1-10 0z"/><path d="M26 18h5M26 26h5"/><path d="M33 40q3.5-4 7 0t7 0 7 0M33 50q3.5-4 7 0t7 0 7 0"/></svg>`,
+  oilp: `<svg viewBox="0 0 64 64" ${SW} ${R}><path d="M16 30h28v18H22q-6 0-6-6z"/><path d="M24 30v-5h12v5"/><path d="M16 33L6 25"/><path d="M44 34h7a4 4 0 0 1 4 4v1a4 4 0 0 1-4 4h-7"/><path d="M5 31q-3 5 0 7 3-2 0-7z" fill="#e5412f"/></svg>`,
+  battery: `<svg viewBox="0 0 64 64" ${SW} ${R}><rect x="8" y="24" width="48" height="26" rx="2"/><rect x="14" y="17" width="8" height="7"/><rect x="42" y="17" width="8" height="7"/><path d="M14 37h10M40 37h10M45 32v10"/></svg>`,
+  fuel: `<svg viewBox="0 0 64 64" ${SW} ${A}><rect x="10" y="10" width="26" height="44" rx="3"/><rect x="16" y="16" width="14" height="10"/><path d="M6 54h34"/><path d="M36 22h4l8 8v14a3 3 0 0 0 6 0V28l-7-8"/></svg>`,
+  tire: `<svg viewBox="0 0 64 64" ${SW} ${A}><path d="M20 54C12 46 10 26 18 16Q32 8 46 16C54 26 52 46 44 54"/><path d="M20 54l4-4 4 4 4-4 4 4 4-4 4 4"/><path d="M32 24v13"/><circle cx="32" cy="44" r="1.5" fill="#f5c400"/></svg>`,
+  engine: `<svg viewBox="0 0 64 64" ${SW} ${A}><path d="M14 26h8l4-6h14v6h6v-4h8v20h-8v-4h-4l-4 8H24l-6-8h-4z"/><path d="M28 20v-4h8v4"/><path d="M8 30v10M8 35h6"/></svg>`,
+  wrench: `<svg viewBox="0 0 64 64" ${SW} ${A}><path d="M44 8a12 12 0 0 0-11 16L10 47a5 5 0 0 0 7 7l23-23A12 12 0 0 0 56 20l-8 8-8-4-4-8z"/></svg>`
+};
+
+const Q = [
+ {icon:'parking', color:'red',
+  scene:'A red "P" inside a circle with brackets on each side lights up as you pull away from the curb.',
+  opts:['The parking brake is on','Your tires need air','The engine is overheating','Time for an oil change'], ans:0,
+  fb:'That is the parking brake light. Most of the time you just forgot to release it. If it stays on after you do, your brake fluid could be low, so get it checked.', urg:['red','Check right away']},
+ {icon:'coolant', color:'red',
+  scene:'A red thermometer sitting in wavy lines comes on while you are driving on the highway.',
+  opts:['The engine is overheating or coolant is low','Your windshield washer fluid is low','Your battery is dying','Your fuel is low'], ans:0,
+  fb:'This is the engine temperature and coolant warning. Pull over safely and shut the engine off. Driving while overheated can seriously damage the engine.', urg:['red','Pull over now']},
+ {icon:'oilp', color:'red',
+  scene:'A red light shaped like an oil can with a single drip comes on while you are driving.',
+  opts:['Low oil pressure','Oil change reminder','Fuel leak','Windshield washer is empty'], ans:0,
+  fb:'A red oil can means the engine is not getting enough oil pressure. Stop and turn the engine off as soon as it is safe. Driving on risks wrecking the engine.', urg:['red','Pull over now']},
+ {icon:'battery', color:'red',
+  scene:'A red battery symbol appears on your dashboard while you are driving.',
+  opts:['A battery or charging problem','Your phone battery is low','Your key fob battery is low','Your car is in eco mode'], ans:0,
+  fb:'A red battery light means something is wrong with the car battery or the charging system. The car can stall once the battery drains, so get it checked soon.', urg:['amber','Get it checked soon']},
+ {icon:'tire', color:'amber',
+  scene:'A yellow symbol of a tire cross-section with an exclamation mark appears on a cold morning.',
+  opts:['Low tire pressure','A tire has blown out','Your wheels are out of alignment','Your brake pads are worn'], ans:0,
+  fb:'This is the tire pressure monitor (TPMS). Cold weather lowers pressure, so check your tires and add air at the next gas station.', urg:['amber','Fix this week']},
+ {icon:'wrench', color:'amber',
+  scene:'A yellow wrench or a "Maintenance Required" message shows up right after you start the car.',
+  opts:['A routine service or oil change is due','The engine is about to fail','The transmission is broken','You need new wiper blades'], ans:0,
+  fb:'This is a service reminder, not an emergency. It goes off based on mileage or time. Book an oil change when it is convenient and the shop will reset it.', urg:['green','Book a service']},
+ {icon:'engine', color:'amber',
+  scene:'Your yellow check engine light is on and steady, not flashing. The car feels normal. What is the best move?',
+  opts:['Ignore it for the next few months','Book a diagnostic soon, it could be something small like a loose gas cap','Call a tow truck right now','Add more oil'], ans:1,
+  fb:'A steady check engine light means the car has stored a fault code. It is often minor, but a shop can read the code. Do not ignore it for months because small problems can grow.', urg:['amber','Book a diagnostic soon']},
+ {icon:'engine', color:'amber', blink:true,
+  scene:'Your check engine light is FLASHING and the car shakes while you drive.',
+  opts:['Keep going, it is only a flicker','Slow down and stop driving as soon as it is safe','Turn up the music','Fill up with gas'], ans:1,
+  fb:'A flashing check engine light often signals an engine misfire that can damage the catalytic converter. Slow down and stop driving as soon as it is safe.', urg:['red','Stop driving']},
+ {icon:'engine', color:'amber',
+  scene:'Myth or fact: "When the check engine light comes on, it means you ran out of gas."',
+  opts:['Myth','Fact'], ans:0,
+  fb:'Myth. The check engine light is about engine and emissions problems. Low fuel has its own light that looks like a gas pump.', urg:['green','Different lights, different jobs']},
+ {icon:'fuel', color:'amber',
+  scene:'The low fuel light just came on. A friend says every car has the same set amount of reserve left. What is the smartest plan?',
+  opts:['Keep driving until the tank feels empty','Refuel soon, since the reserve is different for every car','Switch off the AC and the fuel will last forever','Wait until the light flashes before looking for a station'], ans:1,
+  fb:'There is no universal number. Reports often suggest somewhere around 50 to 100 km, but it depends on the car, how you drive and the conditions. Very low fuel can also wear out the fuel pump.', urg:['amber','Refuel soon']}
+];
+
+const RANKS = [
+ {max:-1,  emoji:'🚨🛻', title:'Tow truck on speed dial', bad:true, quip:'You lost points just looking at the dashboard. Please walk, bike or take the bus. We are worried about you and the car.'},
+ {max:299, emoji:'🅿️', title:'Certified parking lot driver', bad:true, quip:'You know where the steering wheel is. Beyond that, we are praying for your engine.'},
+ {max:599, emoji:'🛢️', title:'Oil change rookie', quip:'Not bad. You will probably make it home, just keep your phone charged in case you need roadside help.'},
+ {max:899, emoji:'🔧', title:'Weekend garage hero', quip:'Solid work. Your uncle is about to ask you to look at his truck. Sorry about that.'},
+ {max:99999,emoji:'🏆', title:'Master mechanic', quip:'The dashboard lights fear you. Dealerships would like a word about a job offer.'}
+];
+
+const $ = id => document.getElementById(id);
+let i=0, score=0, correct=0, answered=false, tInt=null, tLeft=20;
+
+$('rowIcons').innerHTML = ['parking','coolant','oilp','battery','fuel','tire'].map(k=>`<div class="mini">${ICONS[k]}</div>`).join('');
+$('startBtn').onclick=start;
+$('againBtn').onclick=()=>{ $('end').classList.add('hidden'); $('start').classList.remove('hidden'); };
+$('nextBtn').onclick=()=>{ i++; i<Q.length?show():finish(); };
+
+function start(){
+  i=0; score=0; correct=0;
+  $('qtotal').textContent=Q.length;
+  $('start').classList.add('hidden'); $('quiz').classList.remove('hidden');
+  show();
+}
+function show(){
+  answered=false; clearInterval(tInt);
+  const q=Q[i];
+  $('qnum').textContent=i+1; $('score').textContent=score;
+  $('prog').style.width=(i/Q.length*100)+'%';
+  const l=$('light'); l.className='light '+q.color+(q.blink?' blink':''); l.innerHTML=ICONS[q.icon];
+  $('scene').textContent=q.scene;
+  const o=$('opts'); o.innerHTML='';
+  q.opts.forEach((t,idx)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=t; b.onclick=()=>pick(idx,false); o.appendChild(b); });
+  $('fb').classList.add('hidden'); $('nextBtn').classList.add('hidden');
+  $('nextBtn').textContent = i===Q.length-1 ? 'See my rating' : 'Next';
+  if($('timerToggle').checked){
+    $('timerWrap').classList.remove('hidden'); tLeft=20; $('timerBar').style.width='100%';
+    tInt=setInterval(()=>{ tLeft-=0.1; $('timerBar').style.width=Math.max(tLeft/20*100,0)+'%'; if(tLeft<=0){ clearInterval(tInt); pick(-1,true);} },100);
+  } else $('timerWrap').classList.add('hidden');
+}
+function pick(idx,timeout){
+  if(answered) return; answered=true; clearInterval(tInt);
+  const q=Q[i], ok = idx===q.ans, timerOn=$('timerToggle').checked;
+  let head, change=0;
+  if(timeout){ head='Time is up. No points lost.'; }
+  else if(ok){
+    change=100; correct++;
+    head='Correct! +100 points';
+    if(timerOn && tLeft>=10){ change+=25; head='Correct! +100 points, +25 speed bonus'; }
+  } else { change=-50; head='Wrong answer. -50 points'; }
+  score+=change;
+  [...$('opts').children].forEach((b,k)=>{ b.disabled=true; if(k===q.ans) b.classList.add('right'); else if(k===idx) b.classList.add('wrong'); });
+  const fb=$('fb'); fb.className='fb '+(ok&&!timeout?'good':'bad');
+  fb.innerHTML='<strong>'+head+'</strong>'+q.fb+'<br><span class="tag '+q.urg[0]+'">'+q.urg[1]+'</span>';
+  $('score').textContent=score;
+  $('nextBtn').classList.remove('hidden'); $('nextBtn').focus();
+}
+function finish(){
+  $('quiz').classList.add('hidden'); $('end').classList.remove('hidden');
+  const r=RANKS.find(x=>score<=x.max);
+  $('emoji').textContent=r.emoji;
+  $('rank').textContent=r.title; $('rank').className='rank'+(r.bad?' bad':'');
+  $('finalScore').textContent=score+' points';
+  $('correctCount').textContent=correct+' of '+Q.length+' correct';
+  $('quip').textContent=r.quip;
+}
+</script>
+</body>
+</html>
